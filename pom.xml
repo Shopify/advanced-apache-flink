@@ -6,7 +6,7 @@
     <groupId>com.example</groupId>
     <artifactId>advanced-apache-flink</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>Advanced Apache Flink</name>
 
@@ -39,12 +39,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.apache.flink</groupId>
-                <artifactId>flink-walkthrough-common</artifactId>
-                <version>${flink.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-streaming-java</artifactId>
@@ -107,6 +101,12 @@
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-table-planner-loader</artifactId>
+                <version>${flink.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-table-planner_2.12</artifactId>
                 <version>${flink.version}</version>
                 <scope>provided</scope>
             </dependency>
