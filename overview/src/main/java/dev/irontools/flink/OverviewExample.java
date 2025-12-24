@@ -11,11 +11,11 @@ public class OverviewExample {
 
     tEnv.executeSql("""
       CREATE TABLE Orders (
-          order_number BIGINT,
-          price        DECIMAL(10,2),
-          buyer_id     STRING,
-          category_id  INT,
-          order_time   TIMESTAMP(3)
+        order_number BIGINT,
+        price        DECIMAL(10,2),
+        buyer_id     STRING,
+        category_id  INT,
+        order_time   TIMESTAMP(3)
       ) WITH (
         'connector' = 'datagen',
         'number-of-rows' = '100',
