@@ -9,7 +9,7 @@ public class OrderSourceTableExample {
     TableEnvironment tEnv = TableEnvironment.create(settings);
 
     tEnv.executeSql("""
-      CREATE TABLE orders (
+      CREATE TABLE Orders (
         order_id STRING,
         customer_name STRING,
         category STRING,
@@ -22,11 +22,13 @@ public class OrderSourceTableExample {
       )
       """);
 
+    // tEnv.executeSql("EXPLAIN SELECT * FROM Orders").print();
+
     tEnv.executeSql("""
       SELECT
         category,
         ROUND(SUM(amount), 2) as total_amount
-      FROM orders
+      FROM Orders
       WHERE amount > 100.0
       GROUP BY category
       """).print();
