@@ -40,13 +40,14 @@ public class OrderRowDataSource implements SourceFunction<RowData> {
     }
 
     private RowData convertToRowData(Order order) {
-        GenericRowData rowData = new GenericRowData(6);
+        GenericRowData rowData = new GenericRowData(7);
         rowData.setField(0, StringData.fromString(order.getOrderId()));
         rowData.setField(1, StringData.fromString(order.getCustomerName()));
         rowData.setField(2, StringData.fromString(order.getCategory()));
         rowData.setField(3, DecimalData.fromBigDecimal(BigDecimal.valueOf(order.getAmount()), 10, 2));
-        rowData.setField(4, StringData.fromString(order.getProductName()));
-        rowData.setField(5, order.getTimestamp());
+        rowData.setField(4, StringData.fromString(order.getProductId()));
+        rowData.setField(5, StringData.fromString(order.getProductName()));
+        rowData.setField(6, order.getTimestamp());
         rowData.setRowKind(RowKind.INSERT);
         return rowData;
     }

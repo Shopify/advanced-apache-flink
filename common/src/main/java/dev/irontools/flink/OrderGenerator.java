@@ -18,6 +18,13 @@ public class OrderGenerator {
         "Home & Garden",
         "Sports"
     };
+    private static final String[] PRODUCT_NAMES = {
+        "Laptop",
+        "Mouse",
+        "Keyboard",
+        "Monitor",
+        "Headphones"
+    };
 
     public static List<Order> generateOrders(int count) {
         List<Order> orders = new ArrayList<>();
@@ -32,10 +39,12 @@ public class OrderGenerator {
         String customerName = faker.name().fullName();
         String category = CATEGORIES[random.nextInt(CATEGORIES.length)];
         Double amount = 10.0 + (random.nextDouble() * 990.0);
-        String productName = faker.commerce().productName();
+        int productIndex = random.nextInt(PRODUCT_NAMES.length);
+        String productId = "P" + (productIndex + 1);
+        String productName = PRODUCT_NAMES[productIndex];
         Long timestamp = System.currentTimeMillis();
 
-        return new Order(orderId, customerName, category, amount, productName, timestamp);
+        return new Order(orderId, customerName, category, amount, productId, productName, timestamp);
     }
 
     /**

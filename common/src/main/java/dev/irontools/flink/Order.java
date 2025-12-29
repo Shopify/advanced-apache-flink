@@ -7,17 +7,19 @@ public class Order {
     private String customerName;
     private String category;
     private Double amount;
+    private String productId;
     private String productName;
     private Long timestamp;
 
     public Order() {
     }
 
-    public Order(String orderId, String customerName, String category, Double amount, String productName, Long timestamp) {
+    public Order(String orderId, String customerName, String category, Double amount, String productId, String productName, Long timestamp) {
         this.orderId = orderId;
         this.customerName = customerName;
         this.category = category;
         this.amount = amount;
+        this.productId = productId;
         this.productName = productName;
         this.timestamp = timestamp;
     }
@@ -54,6 +56,14 @@ public class Order {
         this.amount = amount;
     }
 
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
     public String getProductName() {
         return productName;
     }
@@ -79,13 +89,14 @@ public class Order {
                 Objects.equals(customerName, order.customerName) &&
                 Objects.equals(category, order.category) &&
                 Objects.equals(amount, order.amount) &&
+                Objects.equals(productId, order.productId) &&
                 Objects.equals(productName, order.productName) &&
                 Objects.equals(timestamp, order.timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderId, customerName, category, amount, productName, timestamp);
+        return Objects.hash(orderId, customerName, category, amount, productId, productName, timestamp);
     }
 
     @Override
@@ -95,6 +106,7 @@ public class Order {
                 ", customerName='" + customerName + '\'' +
                 ", category='" + category + '\'' +
                 ", amount=" + amount +
+                ", productId='" + productId + '\'' +
                 ", productName='" + productName + '\'' +
                 ", timestamp=" + timestamp +
                 '}';

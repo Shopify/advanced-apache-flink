@@ -14,6 +14,7 @@ public class OrderSourceTableExample {
         customer_name STRING,
         category STRING,
         amount DECIMAL(10, 2),
+        product_id STRING,
         product_name STRING,
         `timestamp` BIGINT
       ) WITH (
