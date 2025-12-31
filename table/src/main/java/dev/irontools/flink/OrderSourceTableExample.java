@@ -1,6 +1,7 @@
 package dev.irontools.flink;
 
 import org.apache.flink.table.api.EnvironmentSettings;
+import org.apache.flink.table.api.PlanReference;
 import org.apache.flink.table.api.TableEnvironment;
 
 public class OrderSourceTableExample {
@@ -22,6 +23,28 @@ public class OrderSourceTableExample {
         'totalCount' = '100'
       )
       """);
+
+    // tEnv.executeSql("""
+    //   CREATE TABLE PrintSink (
+    //     category STRING,
+    //     total_amount DECIMAL(10, 2)
+    //   ) WITH (
+    //     'connector' = 'print'
+    //   )
+    // """);
+    //
+    // tEnv.executeSql("""
+    //   COMPILE PLAN 'plan.json' FOR
+    //   INSERT INTO PrintSink
+    //   SELECT
+    //     category,
+    //     ROUND(SUM(amount), 2) as total_amount
+    //   FROM Orders
+    //   WHERE amount > 100.0
+    //   GROUP BY category
+    // """);
+
+    // tEnv.loadPlan(PlanReference.fromFile("plan.json")).execute();
 
     // tEnv.executeSql("EXPLAIN SELECT * FROM Orders").print();
 
