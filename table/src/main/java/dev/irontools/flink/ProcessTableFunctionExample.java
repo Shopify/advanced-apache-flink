@@ -23,7 +23,10 @@ public class ProcessTableFunctionExample {
         WATERMARK FOR event_time AS event_time - INTERVAL '5' SECONDS
       ) WITH (
         'connector' = 'order-source',
-        'totalCount' = '100'
+        'totalCount' = '100',
+        'batchSize' = '1',
+        'delayMillis' = '5000',
+        'useStaticCustomerNames' = 'true'
       )
       """);
 

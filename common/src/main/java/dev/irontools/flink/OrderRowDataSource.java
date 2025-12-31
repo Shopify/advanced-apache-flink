@@ -13,18 +13,20 @@ public class OrderRowDataSource implements SourceFunction<RowData> {
     private final int totalCount;
     private final int batchSize;
     private final long delayMillis;
+    private final boolean useStaticCustomerNames;
     private volatile boolean isRunning = true;
 
-    public OrderRowDataSource(int totalCount, int batchSize, long delayMillis) {
+    public OrderRowDataSource(int totalCount, int batchSize, long delayMillis, boolean useStaticCustomerNames) {
         this.totalCount = totalCount;
         this.batchSize = batchSize;
         this.delayMillis = delayMillis;
+        this.useStaticCustomerNames = useStaticCustomerNames;
     }
 
     @Override
     public void run(SourceContext<RowData> ctx) throws Exception {
         Iterable<Order> orders = OrderGenerator.generateOrdersWithDelay(
-            totalCount, batchSize, delayMillis);
+            totalCount, batchSize, delayMillis, useStaticCustomerNames);
 
         for (Order order : orders) {
             if (!isRunning) {

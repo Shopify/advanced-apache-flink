@@ -11,12 +11,14 @@ public class OrderTableSource implements ScanTableSource {
     private final int totalCount;
     private final int batchSize;
     private final long delayMillis;
+    private final boolean useStaticCustomerNames;
     private final DataType dataType;
 
-    public OrderTableSource(int totalCount, int batchSize, long delayMillis, DataType dataType) {
+    public OrderTableSource(int totalCount, int batchSize, long delayMillis, DataType dataType, boolean useStaticCustomerNames) {
         this.totalCount = totalCount;
         this.batchSize = batchSize;
         this.delayMillis = delayMillis;
+        this.useStaticCustomerNames = useStaticCustomerNames;
         this.dataType = dataType;
     }
 
@@ -27,13 +29,13 @@ public class OrderTableSource implements ScanTableSource {
 
     @Override
     public ScanRuntimeProvider getScanRuntimeProvider(ScanContext context) {
-        OrderRowDataSource orderRowDataSource = new OrderRowDataSource(totalCount, batchSize, delayMillis);
+        OrderRowDataSource orderRowDataSource = new OrderRowDataSource(totalCount, batchSize, delayMillis, useStaticCustomerNames);
         return SourceFunctionProvider.of(orderRowDataSource, true);
     }
 
     @Override
     public DynamicTableSource copy() {
-        return new OrderTableSource(totalCount, batchSize, delayMillis, dataType);
+        return new OrderTableSource(totalCount, batchSize, delayMillis, dataType, useStaticCustomerNames);
     }
 
     @Override

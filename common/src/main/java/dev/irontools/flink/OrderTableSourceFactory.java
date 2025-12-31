@@ -32,6 +32,12 @@ public class OrderTableSourceFactory implements DynamicTableSourceFactory {
             .defaultValue(100L)
             .withDescription("Delay in milliseconds between batches");
 
+    public static final ConfigOption<Boolean> USE_STATIC_CUSTOMER_NAMES =
+        ConfigOptions.key("useStaticCustomerNames")
+            .booleanType()
+            .defaultValue(false)
+            .withDescription("Use static predefined customer names instead of Faker");
+
     @Override
     public String factoryIdentifier() {
         return IDENTIFIER;
@@ -48,6 +54,7 @@ public class OrderTableSourceFactory implements DynamicTableSourceFactory {
         options.add(TOTAL_COUNT);
         options.add(BATCH_SIZE);
         options.add(DELAY_MILLIS);
+        options.add(USE_STATIC_CUSTOMER_NAMES);
         return options;
     }
 
@@ -61,12 +68,14 @@ public class OrderTableSourceFactory implements DynamicTableSourceFactory {
         int totalCount = options.get(TOTAL_COUNT);
         int batchSize = options.get(BATCH_SIZE);
         long delayMillis = options.get(DELAY_MILLIS);
+        boolean useStaticCustomerNames = options.get(USE_STATIC_CUSTOMER_NAMES);
 
         return new OrderTableSource(
             totalCount,
             batchSize,
             delayMillis,
-            context.getCatalogTable().getResolvedSchema().toPhysicalRowDataType()
+            context.getCatalogTable().getResolvedSchema().toPhysicalRowDataType(),
+            useStaticCustomerNames
         );
     }
 }
