@@ -40,9 +40,10 @@ public class ProcessTableFunctionExample {
         session_duration
       FROM order_session_processor(
         `order` => TABLE Orders PARTITION BY customer_name,
-        `on_time` => DESCRIPTOR(event_time),
         `sessionTimeoutSec` => 30,
-        `reminderOffsetSec` => 10
+        `reminderOffsetSec` => 10,
+        `on_time` => DESCRIPTOR(event_time),
+        `uid` => 'order_session_processor'
       )
       """).print();
   }
