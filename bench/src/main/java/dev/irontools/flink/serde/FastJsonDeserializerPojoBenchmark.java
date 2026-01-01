@@ -17,6 +17,11 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.profile.JavaFlightRecorderProfiler;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 @Fork(value = 1)
 @Warmup(iterations = 5)
@@ -71,5 +76,14 @@ public class FastJsonDeserializerPojoBenchmark {
   public Customer measureFastJsonDeserializationStandard(JsonDeserializationState scenario)
       throws IOException {
     return scenario.fastDeserializationSchema.deserialize(scenario.data);
+  }
+
+  public static void main(String[] args) throws RunnerException {
+    Options opt = new OptionsBuilder()
+        .include(FastJsonDeserializerPojoBenchmark.class.getSimpleName())
+        // .addProfiler(JavaFlightRecorderProfiler.class)
+        .build();
+
+    new Runner(opt).run();
   }
 }
