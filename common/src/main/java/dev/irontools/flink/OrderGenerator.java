@@ -33,6 +33,10 @@ public class OrderGenerator {
         "Ethan Hunt"
     };
 
+    public static List<Order> generateOrders(int count) {
+        return generateOrders(count, false);
+    }
+
     public static List<Order> generateOrders(int count, boolean useStaticCustomerNames) {
         List<Order> orders = new ArrayList<>();
         for (int i = 0; i < count; i++) {

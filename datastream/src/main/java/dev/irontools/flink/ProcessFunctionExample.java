@@ -37,7 +37,7 @@ public class ProcessFunctionExample {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // Generate 100 orders with pauses: 10 orders per batch, 5-second delay between batches
-        Iterable<Order> orders = OrderGenerator.generateOrdersWithDelay(100, 10, 5000);
+        Iterable<Order> orders = OrderGenerator.generateOrdersWithDelay(100, 10, 5000, false);
 
         env.fromCollection(orders.iterator(), Order.class)
             // Assign timestamps and watermarks for event time processing
