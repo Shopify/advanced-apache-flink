@@ -15,6 +15,7 @@
         <module>overview</module>
         <module>datastream</module>
         <module>table</module>
+        <module>bench</module>
     </modules>
 
     <properties>
