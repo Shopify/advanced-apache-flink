@@ -9,7 +9,11 @@ public class DataStreamDebugExample {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
+
         conf.setString("execution.checkpointing.savepoint-dir", "file:///tmp/flink-savepoints");
+
+        // conf.setString("execution.state-recovery.path", "/tmp/flink-savepoints/generated-savepoint");
+
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(conf);
 
         Iterable<Order> orders = OrderGenerator.generateOrdersWithDelay(5000000, 5, 5000, false);
