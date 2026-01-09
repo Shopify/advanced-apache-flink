@@ -24,6 +24,19 @@ public class ProductWindowAggExample {
       )
       """);
 
+    // Deduplication
+    // tEnv.executeSql("""
+    //   SELECT
+    //     product_id,
+    //     product_name,
+    //     price
+    //   FROM (
+    //     SELECT *,
+    //       ROW_NUMBER() OVER (PARTITION BY product_id ORDER BY event_time ASC) AS row_num
+    //     FROM Products)
+    //   WHERE row_num = 1
+    //   """).print();
+
     // EXPLAIN CHANGELOG_MODE
     tEnv.executeSql("""
       SELECT
