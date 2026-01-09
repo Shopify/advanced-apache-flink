@@ -32,6 +32,12 @@ public class ProductTableSourceFactory implements DynamicTableSourceFactory {
           .defaultValue(1000L)
           .withDescription("Delay in milliseconds between update cycles");
 
+  public static final ConfigOption<Boolean> APPEND_ONLY =
+      ConfigOptions.key("appendOnly")
+          .booleanType()
+          .defaultValue(false)
+          .withDescription("If true, emit only INSERT events (no UPDATE_AFTER). Useful for PTFs with time semantics.");
+
   @Override
   public String factoryIdentifier() {
     return IDENTIFIER;
@@ -48,6 +54,7 @@ public class ProductTableSourceFactory implements DynamicTableSourceFactory {
     options.add(PRODUCT_COUNT);
     options.add(UPDATE_CYCLES);
     options.add(DELAY_MILLIS);
+    options.add(APPEND_ONLY);
     return options;
   }
 
@@ -61,11 +68,13 @@ public class ProductTableSourceFactory implements DynamicTableSourceFactory {
     int productCount = options.get(PRODUCT_COUNT);
     int updateCycles = options.get(UPDATE_CYCLES);
     long delayMillis = options.get(DELAY_MILLIS);
+    boolean appendOnly = options.get(APPEND_ONLY);
 
     return new ProductTableSource(
         productCount,
         updateCycles,
         delayMillis,
+        appendOnly,
         context.getCatalogTable().getResolvedSchema().toPhysicalRowDataType()
     );
   }

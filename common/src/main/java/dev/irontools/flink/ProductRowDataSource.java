@@ -13,12 +13,14 @@ public class ProductRowDataSource implements SourceFunction<RowData> {
   private final int productCount;
   private final int updateCycles;
   private final long delayMillis;
+  private final boolean appendOnly;
   private volatile boolean isRunning = true;
 
-  public ProductRowDataSource(int productCount, int updateCycles, long delayMillis) {
+  public ProductRowDataSource(int productCount, int updateCycles, long delayMillis, boolean appendOnly) {
     this.productCount = productCount;
     this.updateCycles = updateCycles;
     this.delayMillis = delayMillis;
+    this.appendOnly = appendOnly;
   }
 
   @Override
@@ -46,7 +48,7 @@ public class ProductRowDataSource implements SourceFunction<RowData> {
     rowData.setField(1, StringData.fromString(product.getProductName()));
     rowData.setField(2, DecimalData.fromBigDecimal(BigDecimal.valueOf(product.getPrice()), 10, 2));
     rowData.setField(3, product.getUpdateTime());
-    if (productWithMetadata.isUpdate()) {
+   if (!appendOnly && productWithMetadata.isUpdate()) {
       rowData.setRowKind(RowKind.UPDATE_AFTER);
     } else {
       rowData.setRowKind(RowKind.INSERT);

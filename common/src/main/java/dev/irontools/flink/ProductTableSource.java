@@ -11,29 +11,31 @@ public class ProductTableSource implements ScanTableSource {
   private final int productCount;
   private final int updateCycles;
   private final long delayMillis;
+  private final boolean appendOnly;
   private final DataType dataType;
 
-  public ProductTableSource(int productCount, int updateCycles, long delayMillis, DataType dataType) {
+  public ProductTableSource(int productCount, int updateCycles, long delayMillis, boolean appendOnly, DataType dataType) {
     this.productCount = productCount;
     this.updateCycles = updateCycles;
     this.delayMillis = delayMillis;
+    this.appendOnly = appendOnly;
     this.dataType = dataType;
   }
 
   @Override
   public ChangelogMode getChangelogMode() {
-    return ChangelogMode.all();
+    return appendOnly ? ChangelogMode.insertOnly() : ChangelogMode.all();
   }
 
   @Override
   public ScanRuntimeProvider getScanRuntimeProvider(ScanContext context) {
-    ProductRowDataSource productRowDataSource = new ProductRowDataSource(productCount, updateCycles, delayMillis);
+    ProductRowDataSource productRowDataSource = new ProductRowDataSource(productCount, updateCycles, delayMillis, appendOnly);
     return SourceFunctionProvider.of(productRowDataSource, true);
   }
 
   @Override
   public DynamicTableSource copy() {
-    return new ProductTableSource(productCount, updateCycles, delayMillis, dataType);
+    return new ProductTableSource(productCount, updateCycles, delayMillis, appendOnly, dataType);
   }
 
   @Override
