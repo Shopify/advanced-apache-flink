@@ -18,3 +18,5 @@ buildNumber.properties
 
 .idea
 *.iml
+
+k8s/storage/

@@ -1,0 +1,105 @@
+apiVersion: flink.apache.org/v1beta1
+kind: FlinkDeployment
+metadata:
+  name: advanced-app
+  namespace: flink-bootcamp
+spec:
+  image: flink-jdk:2.1.0
+  flinkVersion: v2_1
+  flinkConfiguration:
+    taskmanager.numberOfTaskSlots: 2
+    taskmanager.memory.managed.fraction: 0.2
+
+    execution.checkpointing.interval: "30 s"
+    execution.checkpointing.min-pause: "10 s"
+    execution.checkpointing.timeout: "60 min"
+    execution.checkpointing.incremental: "true"
+    execution.checkpointing.dir: file:///flink-storage/checkpoints
+    execution.checkpointing.savepoint-dir: file:///flink-storage/savepoints
+
+    state.backend.type: rocksdb
+    state.backend.rocksdb.predefined-options: FLASH_SSD_OPTIMIZED
+    state.backend.rocksdb.thread.num: 4
+    state.backend.rocksdb.compression.per.level: LZ4_COMPRESSION
+
+    pipeline.max-parallelism: 840
+    pipeline.object-reuse: true
+
+    high-availability.type: kubernetes
+    high-availability.storageDir: file:///flink-storage/ha
+
+    cluster.uncaught-exception-handling: FAIL
+    restart-strategy.type: failure-rate
+    restart-strategy.failure-rate.max-failures-per-interval: 5
+    client.timeout: "5 min"
+    web.timeout: "15 min"
+
+    rest.profiling.enabled: "true"
+
+    kubernetes.jobmanager.cpu.limit-factor: 5
+
+    kubernetes.operator.periodic.savepoint.interval: "4 h"
+    kubernetes.operator.savepoint.history.max.age: "24 h"
+    kubernetes.operator.savepoint.history.max.count: "5"
+    kubernetes.operator.savepoint.trigger.grace-period: "30 min"
+
+    jobmanager.scheduler: adaptive
+    job.autoscaler.enabled: true
+    job.autoscaler.vertex.min-parallelism: 2
+    job.autoscaler.vertex.max-parallelism: 6
+    job.autoscaler.stabilization.interval: 1m
+    job.autoscaler.metrics.window: 5m
+    job.autoscaler.utilization.target: 0.8
+    job.autoscaler.target.utilization.boundary: 0.2
+    job.autoscaler.restart.time-tracking.enabled: true
+    job.autoscaler.restart.time-tracking.limit: 5m
+    job.autoscaler.scale-down.max-factor: 0.5
+    job.autoscaler.catch-up.duration: 10mc
+
+    metrics.reporter.prom.factory.class: org.apache.flink.metrics.prometheus.PrometheusReporterFactory
+    metrics.reporter.prom.scope.variables.additional:
+      app_name: advanced-app
+  serviceAccount: flink
+  podTemplate:
+    spec:
+      volumes:
+        - name: flink-storage
+          hostPath:
+            path: /Users/sap1ens/Dev/Irontools/advanced-apache-flink/k8s/storage
+            type: DirectoryOrCreate
+  jobManager:
+    resource:
+      memory: "2048m" # 4g
+      cpu: 1
+      # ephemeralStorage: "200m"
+    podTemplate:
+      spec:
+        containers:
+          - name: flink-main-container
+            ports:
+              - containerPort: 9249
+                name: prometheus
+            volumeMounts:
+              - name: flink-storage
+                mountPath: /flink-storage
+  taskManager:
+    resource:
+      memory: "2048m" # 4g
+      cpu: 1
+      # ephemeralStorage: "200m"
+    podTemplate:
+      spec:
+        containers:
+          - name: flink-main-container
+            ports:
+              - containerPort: 9249
+                name: prometheus
+            volumeMounts:
+              - name: flink-storage
+                mountPath: /flink-storage
+  job:
+    jarURI: local:///opt/flink/examples/streaming/WindowJoin.jar
+    parallelism: 2
+    upgradeMode: savepoint
+    # savepointTriggerNonce: 1
+  mode: native

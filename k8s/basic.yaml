@@ -1,0 +1,48 @@
+apiVersion: flink.apache.org/v1beta1
+kind: FlinkDeployment
+metadata:
+  name: basic-example
+spec:
+  image: flink:2.1
+  flinkVersion: v2_1
+  flinkConfiguration:
+    taskmanager.numberOfTaskSlots: 2
+    execution.checkpointing.interval: "30 s"
+    # execution.checkpointing.min-pause: "10 s"
+    execution.checkpointing.dir: file:///flink-storage/checkpoints
+    execution.checkpointing.savepoint-dir: file:///flink-storage/savepoints
+  serviceAccount: flink
+  podTemplate:
+    spec:
+      volumes:
+        - name: flink-storage
+          hostPath:
+            path: /Users/sap1ens/Dev/Irontools/advanced-apache-flink/k8s/storage
+            type: DirectoryOrCreate
+  jobManager:
+    resource:
+      memory: "2048m"
+      cpu: 1
+    podTemplate:
+      spec:
+        containers:
+          - name: flink-main-container
+            volumeMounts:
+              - name: flink-storage
+                mountPath: /flink-storage
+  taskManager:
+    resource:
+      memory: "2048m"
+      cpu: 1
+    podTemplate:
+      spec:
+        containers:
+          - name: flink-main-container
+            volumeMounts:
+              - name: flink-storage
+                mountPath: /flink-storage
+  job:
+    jarURI: local:///opt/flink/examples/streaming/WindowJoin.jar
+    parallelism: 2
+    upgradeMode: last-state
+    # savepointTriggerNonce: 1
