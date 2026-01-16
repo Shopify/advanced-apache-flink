@@ -116,6 +116,12 @@
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-table-test-utils</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.flink</groupId>
+                    <artifactId>flink-table-planner-loader</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
