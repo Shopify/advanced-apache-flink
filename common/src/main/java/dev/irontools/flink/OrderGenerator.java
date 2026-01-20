@@ -46,13 +46,16 @@ public class OrderGenerator {
     }
 
     public static Order generateOrder(boolean useStaticCustomerNames) {
+        return generateOrder(useStaticCustomerNames, random.nextInt(PRODUCT_NAMES.length));
+    }
+
+    private static Order generateOrder(boolean useStaticCustomerNames, int productIndex) {
         String orderId = faker.idNumber().valid();
         String customerName = useStaticCustomerNames
             ? CUSTOMER_NAMES[random.nextInt(CUSTOMER_NAMES.length)]
             : faker.name().fullName();
         String category = CATEGORIES[random.nextInt(CATEGORIES.length)];
         Double amount = 10.0 + (random.nextDouble() * 990.0);
-        int productIndex = random.nextInt(PRODUCT_NAMES.length);
         String productId = "P" + (productIndex + 1);
         String productName = PRODUCT_NAMES[productIndex];
         Long timestamp = System.currentTimeMillis();
@@ -113,7 +116,8 @@ public class OrderGenerator {
                 }
             }
 
-            Order order = generateOrder(useStaticCustomerNames);
+            int productIndex = (totalCount == 1) ? 0 : random.nextInt(PRODUCT_NAMES.length);
+            Order order = generateOrder(useStaticCustomerNames, productIndex);
             generatedCount++;
             currentBatchCount++;
 
